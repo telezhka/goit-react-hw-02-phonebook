@@ -28,6 +28,10 @@ export const App = () => {
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
+
+  const deleteContact = contactId => {
+    setContacts(contacts.filter(contact => contact.id !== contactId));
+  };
   return (
     <div
       style={{
@@ -49,7 +53,10 @@ export const App = () => {
       />
       <h2>Contacts</h2>
       <FilterInput value={filter} onChange={handleFilterChange} />
-      <ContactList contacts={filteredContacts} />
+      <ContactList
+        contacts={filteredContacts}
+        onDeleteContact={deleteContact}
+      />
     </div>
   );
 };
