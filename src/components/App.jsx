@@ -1,4 +1,12 @@
+import React, { useState } from 'react';
+import { ContactList } from './ContactsList';
+import { Form } from './Form';
 export const App = () => {
+  const [contacts, setContacts] = useState([]);
+
+  const addContact = newContact => {
+    setContacts([...contacts, newContact]);
+  };
   return (
     <div
       style={{
@@ -7,10 +15,11 @@ export const App = () => {
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 40,
-        color: '#010101'
+        color: '#010101',
       }}
     >
-      React homework template
+      <Form onAddContact={addContact} />
+      <ContactList contacts={contacts} />
     </div>
   );
 };
