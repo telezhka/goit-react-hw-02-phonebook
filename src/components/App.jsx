@@ -9,7 +9,16 @@ export const App = () => {
   const [filter, setFilter] = useState('');
 
   const addContact = newContact => {
-    setContacts([...contacts, newContact]);
+    // Check if the name already exists in contacts
+    const isNameExists = contacts.some(
+      contact => contact.name === newContact.name
+    );
+
+    if (isNameExists) {
+      alert(`Contact with the name "${newContact.name}" already exists!`);
+    } else {
+      setContacts([...contacts, newContact]);
+    }
   };
 
   const handleFilterChange = e => {
