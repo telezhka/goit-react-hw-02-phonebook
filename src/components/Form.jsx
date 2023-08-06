@@ -1,18 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { nanoid } from 'nanoid';
 
-export const Form = ({ onAddContact }) => {
-  const [name, setName] = useState('');
-
+export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
   const handleChange = e => {
-    setName(e.target.value);
+    const { name, value } = e.target;
+    if (name === 'name') {
+      setName(value);
+    } else if (name === 'number') {
+      setNumber(value);
+    }
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    const newContact = { id: nanoid(), name };
+    const newContact = { id: nanoid(), name, number };
     onAddContact(newContact);
     setName('');
+    setNumber('');
   };
 
   return (
@@ -25,6 +29,17 @@ export const Form = ({ onAddContact }) => {
         required
         value={name}
         onChange={handleChange}
+        placeholder="Name"
+      />
+      <input
+        type="tel"
+        name="number"
+        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+        required
+        value={number}
+        onChange={handleChange}
+        placeholder="Phone number"
       />
       <button type="submit">Add Contact</button>
     </form>
