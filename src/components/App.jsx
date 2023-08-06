@@ -1,62 +1,82 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
+import { nanoid } from 'nanoid';
 import { ContactList } from './ContactsList';
 import { Form } from './Form';
 import { FilterInput } from './FilterInput';
-export const App = () => {
-  const [contacts, setContacts] = useState([]);
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
-  const [filter, setFilter] = useState('');
+export class App extends Component {
+  state = {
+    contacts: [],
+    filter: '',
+  };
 
-  const addContact = newContact => {
-    // Check if the name already exists in contacts
-    const isNameExists = contacts.some(
-      contact => contact.name === newContact.name
+  handleAddContact = (name, number) => {
+    const newContact = {
+      id: nanoid(),
+      name,
+      number,
+    };
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
+  };
+
+  handleDeleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
+
+  handleFilterChange = event => {
+    this.setState({ filter: event.target.value });
+  };
+
+  getFilteredContacts = () => {
+    const { contacts, filter } = this.state;
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
     );
-
-    if (isNameExists) {
-      alert(`Contact with the name "${newContact.name}" already exists!`);
-    } else {
-      setContacts([...contacts, newContact]);
-    }
   };
 
-  const handleFilterChange = e => {
-    setFilter(e.target.value);
-  };
+  render() {
+    const { filter } = this.state;
+    const filteredContacts = this.getFilteredContacts();
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
-  const deleteContact = contactId => {
-    setContacts(contacts.filter(contact => contact.id !== contactId));
-  };
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101',
-      }}
-    >
-      <Form
-        name={name}
-        setName={setName}
-        number={number}
-        setNumber={setNumber}
-        onAddContact={addContact}
-      />
-      <h2>Contacts</h2>
-      <FilterInput value={filter} onChange={handleFilterChange} />
-      <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={deleteContact}
-      />
-    </div>
-  );
-};
+    return (
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          fontSize: 40,
+          color: '#010101',
+        }}
+      >
+        {/* <Form
+          name={name}
+          setName={setName}
+          number={number}
+          setNumber={setNumber}
+          onAddContact={addContact}
+        />
+        <h2>Contacts</h2>
+        <FilterInput value={filter} onChange={handleFilterChange} />
+        <ContactList
+          contacts={filteredContacts}
+          onDeleteContact={deleteContact}
+        /> */}
+        <div>
+          <h1>Phonebook</h1>
+          <Form onAddContact={this.handleAddContact} />
+          <h2>Contacts</h2>
+          <FilterInput value={filter} onChange={this.handleFilterChange} />
+          <ContactList
+            contacts={filteredContacts}
+            onDeleteContact={this.handleDeleteContact}
+          />
+        </div>
+      </div>
+    );
+  }
+}

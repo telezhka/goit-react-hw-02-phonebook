@@ -1,58 +1,59 @@
-import React from 'react';
-import { nanoid } from 'nanoid';
+import React, { Component } from 'react';
 import css from '../css/Form.module.css';
 import PropTypes from 'prop-types';
 
-export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
-  const handleChange = e => {
-    const { name, value } = e.target;
-    if (name === 'name') {
-      setName(value);
-    } else if (name === 'number') {
-      setNumber(value);
+export class Form extends Component {
+  state = {
+    name: '',
+    number: '',
+  };
+
+  handleChange = event => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+    const { name, number } = this.state;
+    if (!name || !number) {
+      alert('Please enter name and number');
+      return;
     }
+    this.props.onAddContact(name, number);
+    this.setState({ name: '', number: '' });
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    const newContact = { id: nanoid(), name, number };
-    onAddContact(newContact);
-    setName('');
-    setNumber('');
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className={css.form}>
-      <input
-        type="text"
-        name="name"
-        pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-        title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-        required
-        value={name}
-        onChange={handleChange}
-        placeholder="Name"
-        className={(css.inputName, css.input)}
-      />
-      <input
-        type="tel"
-        name="number"
-        pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-        title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-        required
-        value={number}
-        onChange={handleChange}
-        placeholder="Phone number"
-        className={(css.inputNum, css.input)}
-      />
-      <button type="submit">Add Contact</button>
-    </form>
-  );
-};
+  render() {
+    const { name, number } = this.state;
+    return (
+      <form onSubmit={this.handleSubmit} className={css.form}>
+        <label>
+          Name:
+          <input
+            type="text"
+            name="name"
+            value={name}
+            onChange={this.handleChange}
+            className={css.input}
+          />
+        </label>
+        <label>
+          Number:
+          <input
+            type="tel"
+            name="number"
+            value={number}
+            onChange={this.handleChange}
+            className={css.input}
+          />
+        </label>
+        <button type="submit">Add Contact</button>
+      </form>
+    );
+  }
+}
 Form.propTypes = {
-  name: PropTypes.string.isRequired,
-  setName: PropTypes.func.isRequired,
-  number: PropTypes.string.isRequired,
-  setNumber: PropTypes.func.isRequired,
-  onAddContact: PropTypes.func.isRequired,
+  name: PropTypes.string,
+  number: PropTypes.string,
 };
