@@ -1,5 +1,6 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
+import css from '../css/Form.module.css';
 
 export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
   const handleChange = e => {
@@ -20,7 +21,7 @@ export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={css.form}>
       <input
         type="text"
         name="name"
@@ -30,6 +31,7 @@ export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
         value={name}
         onChange={handleChange}
         placeholder="Name"
+        className={(css.inputName, css.input)}
       />
       <input
         type="tel"
@@ -40,6 +42,7 @@ export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
         value={number}
         onChange={handleChange}
         placeholder="Phone number"
+        className={(css.inputNum, css.input)}
       />
       <button type="submit">Add Contact</button>
     </form>
