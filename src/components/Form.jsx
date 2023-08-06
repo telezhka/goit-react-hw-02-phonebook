@@ -1,6 +1,7 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
 import css from '../css/Form.module.css';
+import PropTypes from 'prop-types';
 
 export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
   const handleChange = e => {
@@ -47,4 +48,11 @@ export const Form = ({ name, setName, number, setNumber, onAddContact }) => {
       <button type="submit">Add Contact</button>
     </form>
   );
+};
+Form.propTypes = {
+  name: PropTypes.string.isRequired,
+  setName: PropTypes.func.isRequired,
+  number: PropTypes.string.isRequired,
+  setNumber: PropTypes.func.isRequired,
+  onAddContact: PropTypes.func.isRequired,
 };
